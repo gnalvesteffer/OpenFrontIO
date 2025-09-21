@@ -14,6 +14,19 @@ import { AttackExecution } from "../AttackExecution";
 import { EmojiExecution } from "../EmojiExecution";
 
 export class BotBehavior {
+  // Returns the minimum Manhattan distance between any tile owned by playerA and playerB
+  private minDistanceBetweenPlayers(playerA: Player, playerB: Player): number {
+    const tilesA = Array.from(playerA.tiles());
+    const tilesB = Array.from(playerB.tiles());
+    let minDist = Infinity;
+    for (const tileA of tilesA) {
+      for (const tileB of tilesB) {
+        const dist = this.game.manhattanDist(tileA, tileB);
+        if (dist < minDist) minDist = dist;
+      }
+    }
+    return minDist;
+  }
   private enemy: Player | null = null;
   private enemyUpdated: Tick;
 
@@ -247,6 +260,26 @@ export class BotBehavior {
         target.isPlayer() ? target.id() : this.game.terraNullius().id(),
       ),
     );
+  }
+
+  sendResourcesToStrongestAlly() {
+    const allies = this.player.allies();
+    if (allies.length === 0) return;
+
+    // Distribute 25% of resources to all allies
+    const troopsToSend = Math.floor(this.player.troops() * 0.25);
+    const goldToSend = this.player.gold() / BigInt(4);
+
+    if (troopsToSend > 0 || goldToSend > 0) {
+      for (const ally of allies) {
+        if (troopsToSend > 0) {
+          this.player.donateTroops(ally, troopsToSend);
+        }
+        if (goldToSend > 0) {
+          this.player.donateGold(ally, goldToSend);
+        }
+      }
+    }
   }
 }
 

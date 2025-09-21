@@ -59,6 +59,10 @@ export class BotExecution implements Execution {
     this.behavior.handleAllianceRequests();
     this.behavior.handleAllianceExtensionRequests();
     this.maybeAttack();
+
+    if (ticks % 10 === 0) {
+      this.behavior.sendResourcesToStrongestAlly();
+    }
   }
 
   private maybeAttack() {
