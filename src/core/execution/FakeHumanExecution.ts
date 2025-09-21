@@ -157,13 +157,10 @@ export class FakeHumanExecution implements Execution {
     this.updateRelationsFromEmbargos();
     this.behavior.handleAllianceRequests();
     this.behavior.handleAllianceExtensionRequests();
+    this.behavior.distributeResourcesToAllies();
     this.handleUnits();
     this.handleEmbargoesToHostileNations();
     this.maybeAttack();
-
-    if (ticks % 10 === 0) {
-      this.behavior.distributeResourcesToAllies();
-    }
   }
 
   /**
@@ -462,7 +459,8 @@ export class FakeHumanExecution implements Execution {
       this.maybeSpawnStructure(UnitType.Port) ||
       this.maybeSpawnWarship() ||
       this.maybeSpawnStructure(UnitType.Factory) ||
-      this.maybeSpawnStructure(UnitType.MissileSilo)
+      this.maybeSpawnStructure(UnitType.MissileSilo) ||
+      this.maybeSpawnStructure(UnitType.SAMLauncher)
     );
   }
 
