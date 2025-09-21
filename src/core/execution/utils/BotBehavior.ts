@@ -262,7 +262,7 @@ export class BotBehavior {
     );
   }
 
-  sendResourcesToStrongestAlly() {
+  distributeResourcesToAllies() {
     const allies = this.player.allies();
     if (allies.length === 0) return;
 
