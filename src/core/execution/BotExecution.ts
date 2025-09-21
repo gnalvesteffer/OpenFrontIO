@@ -61,7 +61,7 @@ export class BotExecution implements Execution {
     this.maybeAttack();
 
     if (ticks % 10 === 0) {
-      this.behavior.sendResourcesToStrongestAlly();
+      this.behavior.distributeResourcesToAllies();
     }
   }
 

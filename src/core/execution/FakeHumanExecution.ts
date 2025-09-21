@@ -160,6 +160,10 @@ export class FakeHumanExecution implements Execution {
     this.handleUnits();
     this.handleEmbargoesToHostileNations();
     this.maybeAttack();
+
+    if (ticks % 10 === 0) {
+      this.behavior.distributeResourcesToAllies();
+    }
   }
 
   /**
