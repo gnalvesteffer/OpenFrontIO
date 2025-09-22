@@ -396,6 +396,8 @@ export class FakeHumanExecution implements Execution {
             return 50_000;
           case UnitType.Port:
             return 10_000;
+          case UnitType.SAMLauncher:
+            return 15_000;
           default:
             return 0;
         }
@@ -460,7 +462,8 @@ export class FakeHumanExecution implements Execution {
       this.maybeSpawnWarship() ||
       this.maybeSpawnStructure(UnitType.Factory) ||
       this.maybeSpawnStructure(UnitType.MissileSilo) ||
-      this.maybeSpawnStructure(UnitType.SAMLauncher)
+      this.maybeSpawnStructure(UnitType.SAMLauncher) ||
+      this.maybeSpawnStructure(UnitType.DefensePost)
     );
   }
 
@@ -552,9 +555,23 @@ export class FakeHumanExecution implements Execution {
 
           return w;
         };
-      case UnitType.City:
-      case UnitType.Factory:
-      case UnitType.MissileSilo:
+      case UnitType.DefensePost:
+        return (tile) => {
+          let w = 0;
+
+          // Prefer higher elevations
+          w += mg.magnitude(tile);
+
+          // Prefer to be near the border
+          const closestBorder = closestTwoTiles(mg, borderTiles, [tile]);
+          if (closestBorder !== null) {
+            const d = mg.manhattanDist(closestBorder.x, tile);
+            w -= Math.min(d, borderSpacing); // Negative weight to prefer proximity
+          }
+
+          return w;
+        };
+      default:
         return (tile) => {
           let w = 0;
 
@@ -582,8 +599,6 @@ export class FakeHumanExecution implements Execution {
           // TODO: Cities and factories should consider train range limits
           return w;
         };
-      default:
-        throw new Error(`Value function not implemented for ${type}`);
     }
   }
 
