@@ -6,11 +6,13 @@ import {
   Relation,
   TerraNullius,
   Tick,
+  UnitType,
 } from "../../game/Game";
 import { PseudoRandom } from "../../PseudoRandom";
 import { flattenedEmojiTable } from "../../Util";
 import { AllianceExtensionExecution } from "../alliance/AllianceExtensionExecution";
 import { AttackExecution } from "../AttackExecution";
+import { ConstructionExecution } from "../ConstructionExecution";
 import { EmojiExecution } from "../EmojiExecution";
 
 export class BotBehavior {
@@ -278,6 +280,53 @@ export class BotBehavior {
         if (goldToSend > 0) {
           this.player.donateGold(ally, goldToSend);
         }
+      }
+    }
+  }
+
+  buildUnits() {
+    for (const tile of this.player.tiles()) {
+      if (this.player.canBuild(UnitType.City, tile)) {
+        this.game.addExecution(
+          new ConstructionExecution(this.player, UnitType.City, tile),
+        );
+        break;
+      }
+    }
+
+    for (const tile of this.player.tiles()) {
+      if (this.player.canBuild(UnitType.Factory, tile)) {
+        this.game.addExecution(
+          new ConstructionExecution(this.player, UnitType.Factory, tile),
+        );
+        break;
+      }
+    }
+
+    for (const tile of this.player.tiles()) {
+      if (this.player.canBuild(UnitType.DefensePost, tile)) {
+        this.game.addExecution(
+          new ConstructionExecution(this.player, UnitType.DefensePost, tile),
+        );
+        break;
+      }
+    }
+
+    for (const tile of this.player.tiles()) {
+      if (this.player.canBuild(UnitType.MissileSilo, tile)) {
+        this.game.addExecution(
+          new ConstructionExecution(this.player, UnitType.MissileSilo, tile),
+        );
+        break;
+      }
+    }
+
+    for (const tile of this.player.tiles()) {
+      if (this.player.canBuild(UnitType.SAMLauncher, tile)) {
+        this.game.addExecution(
+          new ConstructionExecution(this.player, UnitType.SAMLauncher, tile),
+        );
+        break;
       }
     }
   }
